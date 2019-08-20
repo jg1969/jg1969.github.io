@@ -1,0 +1,123 @@
+<html>
+<title>Equations</title>
+<style>
+	body {
+		font-family: "Times-Roman", Times, serif;
+		font-size: 18pt;
+	}
+</style>
+<script>
+class Random {
+    constructor() {
+        this._last = {}
+    }
+
+    rand(n, name) {
+        const res = Math.floor(Math.random() * n);
+        if (res == this._last[name])
+            return this.rand(n, name);
+        this._last[name] = res;
+        return res;
+    }
+
+    choose(arr, name) {
+        return arr[this.rand(arr.length, name)];
+    }
+}
+
+var rng = new Random();
+
+function set(name, val, sign, ones) {
+	var elem = document.getElementById(name);
+	s = "";
+	if (sign) {
+		s = val >= 0 ? "+" : "";
+	}
+	if (ones || val != 1) {
+		s += val;
+	}
+	elem.innerHTML = s;
+}
+
+function range() {
+	const elems = document.getElementsByName("difficulty");
+	var val;
+	for(i = 0; i < elems.length; ++i) {
+		if (elems[i].checked) val = elems[i].value;
+	}
+	return [-val, val];
+}
+
+function draw(name, range) {
+	const [min, max] = range;
+	return rng.rand(max-min+1, name) + min;
+}
+
+var x, y;
+
+function newproblem() {
+	const numrng = range();
+	x = draw("x", numrng);
+	y = draw("y", numrng);
+
+	const a = draw("a", numrng);
+	const b = draw("b", numrng);
+	const c = draw("c", numrng);
+	const d = draw("d", numrng);
+	if (a*d == b*c) return show();
+	const count_0 = (a==0) + (b==0) + (c==0) + (d==0);
+	const count_1 = (a==1) + (b==1) + (c==1) + (d==1);
+	if (count_0 > 1 || count_1 > 2) return show();
+	if (x == 0 && y == 0) return show();
+	if (x == 1 && y == 1) return show();
+	set("a", a, 0, 0);
+	set("b", b, 1, 0);
+	set("c", c, 0, 0);
+	set("d", d, 1, 0);
+	set("r1", a*x + b*y, 0, 1);
+	set("r2", c*x + d*y, 0, 1);
+	document.getElementById("answer").innerHTML = "";
+}
+
+function show() {
+	s = "x=" + x + "  and y=" + y;
+	document.getElementById("answer").innerHTML = s;
+}
+
+function main() {
+	newproblem();
+}
+</script>
+<body onload="main()">
+<h1>Simultaneous Equations</h1>
+
+<input name="difficulty" type="radio" value="5" id="easy" checked="true" onchange="newproblem()"><label for="easy">-5 to +5</label>
+<input name="difficulty" type="radio" value="10" id="medium" onchange="newproblem()"><label for="medium">-10 to +10</label>
+<input name="difficulty" type="radio" value="20" id="hard" onchange="newproblem()"><label for="hard">-20 to +20</label>
+
+<hr>
+<table>
+<tr>
+	<td align="right"><span id="a"></span>x</td>
+	<td align="right"><span id="b"></span>y</td>
+	<td>= <span id="r1"></span></td>
+</tr><tr>
+	<td align="right"><span id="c"></span>x</td>
+	<td align="right"><span id="d"></span>y</td>
+	<td>= <span id="r2"></span></td>
+</tr>
+</table>
+<!--
+<span id="a"></span>x <span id="b"></span>y = <span id="r1"></span><br>
+<span id="c"></span>x <span id="d"></span>y = <span id="r2"></span><br>
+-->
+
+<hr>
+<span id="answer"></span>
+<br>
+
+<button onclick="newproblem()">New</button>
+<button onclick="show()">Show</button>
+
+</body>
+</html>
