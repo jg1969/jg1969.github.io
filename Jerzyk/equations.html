@@ -39,8 +39,10 @@ function set(name, val, sign, ones) {
 	if (sign) {
 		s = val >= 0 ? "+" : "";
 	}
-	if (ones || val != 1) {
+	if (ones || Math.abs(val) != 1) {
 		s += val;
+	} else if (sign && val == -1) {
+		s += "-";
 	}
 	elem.innerHTML = s;
 }
@@ -65,17 +67,23 @@ function newproblem() {
 	const numrng = range();
 	x = draw("x", numrng);
 	y = draw("y", numrng);
+	hard = document.getElementById("harder").value;
 
 	const a = draw("a", numrng);
 	const b = draw("b", numrng);
 	const c = draw("c", numrng);
 	const d = draw("d", numrng);
-	if (a*d == b*c) return show();
+	if (a*d == b*c) return newproblem();
 	const count_0 = (a==0) + (b==0) + (c==0) + (d==0);
 	const count_1 = (a==1) + (b==1) + (c==1) + (d==1);
-	if (count_0 > 1 || count_1 > 2) return show();
-	if (x == 0 && y == 0) return show();
-	if (x == 1 && y == 1) return show();
+	if (hard) {
+		if (count_0 > 0 || count_1 > 1) return newproblem();
+		if (a == b || c == d) return newproblem();
+	} else {
+		if (count_0 > 1 || count_1 > 2) return newproblem();
+	}
+	if (x == 0 && y == 0) return newproblem();
+	if (x == 1 && y == 1) return newproblem();
 	set("a", a, 0, 0);
 	set("b", b, 1, 0);
 	set("c", c, 0, 0);
@@ -100,6 +108,8 @@ function main() {
 <input name="difficulty" type="radio" value="5" id="easy" checked="true" onchange="newproblem()"><label for="easy">-5 to +5</label>
 <input name="difficulty" type="radio" value="10" id="medium" onchange="newproblem()"><label for="medium">-10 to +10</label>
 <input name="difficulty" type="radio" value="20" id="hard" onchange="newproblem()"><label for="hard">-20 to +20</label>
+
+<input name="harder" type="checkbox" id="harder" checked="true" onchange="newproblem()"><label for="harder">Hard</label>
 
 <hr>
 <table>
