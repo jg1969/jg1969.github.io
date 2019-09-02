@@ -67,7 +67,7 @@ function newproblem() {
 	const numrng = range();
 	x = draw("x", numrng);
 	y = draw("y", numrng);
-	hard = document.getElementById("harder").value;
+	hard = ! document.getElementById("easier").value;
 
 	const a = draw("a", numrng);
 	const b = draw("b", numrng);
@@ -109,7 +109,7 @@ function main() {
 <input name="difficulty" type="radio" value="10" id="medium" onchange="newproblem()"><label for="medium">-10 to +10</label>
 <input name="difficulty" type="radio" value="20" id="hard" onchange="newproblem()"><label for="hard">-20 to +20</label>
 
-<input name="harder" type="checkbox" id="harder" checked="true" onchange="newproblem()"><label for="harder">Hard</label>
+<input name="easier" type="checkbox" id="easier" checked="true" onchange="newproblem()"><label for="easier">Easy</label>
 
 <hr>
 <table>
