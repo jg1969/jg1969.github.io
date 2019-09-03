@@ -48,7 +48,7 @@ function set(name, val, sign, ones) {
 }
 
 function range() {
-	const elems = document.getElementsByName("difficulty");
+	const elems = document.getElementsByName("range");
 	var val;
 	for(i = 0; i < elems.length; ++i) {
 		if (elems[i].checked) val = elems[i].value;
@@ -67,7 +67,8 @@ function newproblem() {
 	const numrng = range();
 	x = draw("x", numrng);
 	y = draw("y", numrng);
-	hard = ! document.getElementById("easier").value;
+	const difficulty = document.getElementById("difficulty").selectedIndex;
+	
 
 	const a = draw("a", numrng);
 	const b = draw("b", numrng);
@@ -75,15 +76,20 @@ function newproblem() {
 	const d = draw("d", numrng);
 	if (a*d == b*c) return newproblem();
 	const count_0 = (a==0) + (b==0) + (c==0) + (d==0);
-	const count_1 = (a==1) + (b==1) + (c==1) + (d==1);
-	if (hard) {
-		if (count_0 > 0 || count_1 > 1) return newproblem();
-		if (a == b || c == d) return newproblem();
-	} else {
-		if (count_0 > 1 || count_1 > 2) return newproblem();
-	}
+	const count_1 = (Math.abs(a)==1) + (Math.abs(b)==1) + (Math.abs(c)==1) + (Math.abs(d)==1);
 	if (x == 0 && y == 0) return newproblem();
 	if (x == 1 && y == 1) return newproblem();
+	if (difficulty == 0) {
+		if (count_0 > 1 || count_1 > 2) return newproblem();
+	}
+	if (difficulty > 0) {
+		if (count_0 > 0 || count_1 > 1) return newproblem();
+		if (a == b || c == d) return newproblem();
+	}
+	if (difficulty > 1) {
+		if (Math.abs(a) == Math.abs(c) || Math.abs(b) == Math.abs(d)) return newproblem();
+		if (count_1 > 0) return newproblem();
+	}
 	set("a", a, 0, 0);
 	set("b", b, 1, 0);
 	set("c", c, 0, 0);
@@ -105,11 +111,15 @@ function main() {
 <body onload="main()">
 <h1>Simultaneous Equations</h1>
 
-<input name="difficulty" type="radio" value="5" id="easy" checked="true" onchange="newproblem()"><label for="easy">-5 to +5</label>
-<input name="difficulty" type="radio" value="10" id="medium" onchange="newproblem()"><label for="medium">-10 to +10</label>
-<input name="difficulty" type="radio" value="20" id="hard" onchange="newproblem()"><label for="hard">-20 to +20</label>
+<input name="range" type="radio" value="5" id="easy" checked="true" onchange="newproblem()"><label for="easy">-5 to +5</label>
+<input name="range" type="radio" value="10" id="medium" onchange="newproblem()"><label for="medium">-10 to +10</label>
+<input name="range" type="radio" value="20" id="hard" onchange="newproblem()"><label for="hard">-20 to +20</label>
 
-<input name="easier" type="checkbox" id="easier" onchange="newproblem()"><label for="easier">Easy</label>
+<select name="difficulty" id="difficulty" onchange="newproblem()">
+	<option name="0">Easy</option>
+	<option name="1" selected>Harder</option>
+	<option name="2">Difficult</option>
+</select>
 
 <hr>
 <table>
