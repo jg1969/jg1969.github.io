@@ -33,6 +33,8 @@ class Random {
 
 var rng = new Random();
 
+// `sign` => show the sign even if + (otherwise only show -)
+// `ones` => show "1" (otherwise don't)
 function set(name, val, sign, ones) {
 	var elem = document.getElementById(name);
 	s = "";
@@ -41,7 +43,8 @@ function set(name, val, sign, ones) {
 	}
 	if (ones || Math.abs(val) != 1) {
 		s += val;
-	} else if (sign && val == -1) {
+	}
+	if (!ones && sign && val == -1) {
 		s += "-";
 	}
 	elem.innerHTML = s;
