@@ -44,7 +44,7 @@ function set(name, val, sign, ones) {
 	if (ones || Math.abs(val) != 1) {
 		s += val;
 	}
-	if (!ones && sign && val == -1) {
+	if (!ones && val == -1) {
 		s += "-";
 	}
 	elem.innerHTML = s;
