@@ -65,13 +65,14 @@ function draw(name, range) {
 }
 
 var x, y;
+var thisproblem=0;
+var last = 0;
 
 function newproblem() {
 	const numrng = range();
 	x = draw("x", numrng);
 	y = draw("y", numrng);
 	const difficulty = document.getElementById("difficulty").selectedIndex;
-	
 
 	const a = draw("a", numrng);
 	const b = draw("b", numrng);
@@ -100,11 +101,26 @@ function newproblem() {
 	set("r1", a*x + b*y, 0, 1);
 	set("r2", c*x + d*y, 0, 1);
 	document.getElementById("answer").innerHTML = "";
+	window.last = window.thisproblem;
+	window.thisproblem = {a: a, b: b, c: c, d: d, x: x, y: y};
 }
 
 function show() {
 	s = "x=" + x + "  and y=" + y;
 	document.getElementById("answer").innerHTML = s;
+}
+
+
+function showlast() {
+	set("a", window.last.a, 0, 0);
+	set("b", window.last.b, 1, 0);
+	set("c", window.last.c, 0, 0);
+	set("d", window.last.d, 1, 0);
+	set("r1", window.last.a*window.last.x + window.last.b*window.last.y, 0, 1);
+	set("r2", window.last.c*window.last.x + window.last.d*window.last.y, 0, 1);
+	x = window.last.x;
+	y = window.last.y;
+	document.getElementById("answer").innerHTML = "";
 }
 
 function main() {
@@ -144,6 +160,7 @@ function main() {
 
 <button onclick="newproblem()">New</button>
 <button onclick="show()">Answer</button>
+<button onclick="showlast()">Last Question</button>
 
 </body>
 </html>
